@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Octave Bengaluru</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"
+        integrity="sha256-ZsWP0vT+akWmvEMkNYgZrPHKU9Ke8nYBPC3dqONp1mY=" crossorigin="anonymous"></script>
+    <style>
+        /* Set height of the grid so .sidenav can be 100% (adjust if neaeded) */
+        .row.content {
+            height: 1500px
+        }
+
+        /* Set gray background color and 100% height */
+        .sidenav {
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* Set black background color, white text and some padding */
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+
+            .row.content {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav">
+                <h4>Octave Bengaluru</h4>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#section1">Home</a></li>
+                </ul><br>
+            </div>
+
+            <div class="col-sm-9">
+                <h4><small>Rates & Inventory</small></h4>
+                <br />
+                <div>
+                    <table id="bookingTable" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Channel</th>
+                                <th>BookingID</th>
+                                <th>Customer Name</th>
+                                <th>Booked On</th>
+                                <th>Checkin</th>
+                                <th>Checkout</th>
+                                <th>Room</th>
+                                <th>Room Nights</th>
+                                <th># of rooms</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var jsonData = {
+            "hotel_name": "Octave Bengaluru",
+            "bookingId": "87654321",
+            "status": "new",
+            "booked_on": "2020-06-10 06:30:19",
+            "source": "ezee",
+            "check_in": "2020-06-11",
+            "check_out": "2020-06-12",
+            "channel": "Booking.com",
+            "total_price": 3000,
+            "total_tax": 300,
+            "total_payment": 3300,
+            "comment": [
+                "I want tea bags",
+                "Need breakfast"
+            ],
+            "booked_by": {
+                "firstName": "Arun",
+                "lastName": "S",
+                "address": {
+                    "country": "India"
+                },
+                "email": "one@test.com",
+                "phone": "+91-9999999999"
+            },
+            "rooms": [
+                {
+                    "name": "Deluxe",
+                    "occupancy": {
+                        "adult": 2,
+                        "child": 0
+                    },
+                    "price": {
+                        "sell_rate": 1000.0,
+                        "tax": 100.0
+                    }
+                },
+                {
+                    "name": "Suite",
+                    "occupancy": {
+                        "adult": 2,
+                        "child": 2
+                    },
+                    "price": {
+                        "sell_rate": 2000.0,
+                        "tax": 200.0
+                    }
+                }
+            ]
+        }
+
+        var tableValues =
+            [
+                [
+                    jsonData.channel,
+                    jsonData.bookingId,
+                    jsonData.booked_by.firstName + " " + jsonData.booked_by.lastName,
+                    moment(jsonData.booked_on, "YYYY-MM-DD HH:mm:ss").format("DD MMM, hh:mm A"),
+                    moment(jsonData.check_in, "YYYY-MM-DD").format("DD MMM"),
+                    moment(jsonData.check_out, "YYYY-MM-DD").format("DD MMM"),
+                    jsonData.rooms.map(function (room) {
+                        return room.name;
+                    }).join(),
+                    moment(jsonData.check_out, "YYYY-MM-DD").diff(jsonData.check_in, "days"),
+                    jsonData.rooms.length,
+                    jsonData.rooms.reduce(function (a, room) {
+                        return a + room.price.sell_rate + room.price.tax;
+                    }, 0)
+                ]
+            ];
+
+
+
+        $(document).ready(function () {
+            $('#bookingTable').DataTable({
+                data: tableValues
+            });
+        });
+    </script>
+
+</body>
+
+</html>
